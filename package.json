@@ -1,0 +1,16 @@
+{
+  "name": "BasicIco",
+  "version": "0.0.1",
+  "description": "",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "truffle compile && truffle test"
+  },
+  "author": "belukov",
+  "license": "ISC"
+}

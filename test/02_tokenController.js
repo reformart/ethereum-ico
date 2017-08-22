@@ -1,7 +1,7 @@
 'use strict';
 
 const Token = artifacts.require("./ControlledToken.sol");
-const Controller = artifacts.require("./AbstractController.sol");
+const Controller = artifacts.require("./EmptyController.sol");
 
 describe("Test token-controller assignment", function() {
 

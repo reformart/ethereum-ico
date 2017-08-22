@@ -6,7 +6,9 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "web3": "^1.0.0-beta.18"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "truffle compile && truffle test"

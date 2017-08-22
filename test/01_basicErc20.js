@@ -2,18 +2,21 @@
 
 const Token = artifacts.require("./Token.sol");
 
+contract('ERC20 compatibility', function(accounts) {
 
-contract('Token', function(accounts) {
-
-  console.log(accounts);
+  //console.log(accounts);
 
 
   let instance;
+  let tokenDecimals;
 
   before(() => {
   
     return Token.deployed().then((_instance) => {
       instance = _instance;
+      return instance.decimalsMultiplier();
+    }).then(_decMul => {
+      tokenDecimals = _decMul;
     });
   });
 
@@ -27,7 +30,7 @@ contract('Token', function(accounts) {
   it("Acc#0 should have 100 tokens on balance", function() {
     return instance.balanceOf.call(accounts[0]).then((_balance) => {
       //console.log("balance: ", _balance);
-      assert.equal(_balance, 100);
+      assert.equal(_balance, 100 * tokenDecimals);
     });
   });
 
@@ -40,22 +43,22 @@ contract('Token', function(accounts) {
 
   it("Acc#0 should transfer 10 tokens to #1", function() {
   
-    return instance.transfer(accounts[1], 10, {from: accounts[0]}).then((_success) => {
+    return instance.transfer(accounts[1], 10 * tokenDecimals, {from: accounts[0]}).then((_success) => {
     
       assert(_success);
       return instance.balanceOf(accounts[0]);
     }).then((_balance) => {
       //console.log("balance: ", _balance);
-      assert.equal(_balance, 90);
+      assert.equal(_balance, 90 * tokenDecimals);
       return instance.balanceOf(accounts[1]);
     }).then((_balance) => {
-      assert.equal(_balance, 10);
+      assert.equal(_balance, 10 * tokenDecimals);
     });
   });
 
   it("Acc#1 must NOT send 20 tokens to #0 (not enouth)", function(done) {
  
-    instance.transfer.call(accounts[0], 20, {from: accounts[1]})
+    instance.transfer.call(accounts[0], 20 * tokenDecimals, {from: accounts[1]})
       .then((_success) => {
         // WTF?
         return done(new Error("Unexpected success transfer"));
@@ -68,66 +71,3 @@ contract('Token', function(accounts) {
 
 });
 
-/*
-contract('MetaCoin', function(accounts) {
-  it("should put 10000 MetaCoin in the first account", function() {
-    return MetaCoin.deployed().then(function(instance) {
-      return instance.getBalance.call(accounts[0]);
-    }).then(function(balance) {
-      assert.equal(balance.valueOf(), 10000, "10000 wasn't in the first account");
-    });
-  });
-  it("should call a function that depends on a linked library", function() {
-    var meta;
-    var metaCoinBalance;
-    var metaCoinEthBalance;
-
-    return MetaCoin.deployed().then(function(instance) {
-      meta = instance;
-      return meta.getBalance.call(accounts[0]);
-    }).then(function(outCoinBalance) {
-      metaCoinBalance = outCoinBalance.toNumber();
-      return meta.getBalanceInEth.call(accounts[0]);
-    }).then(function(outCoinBalanceEth) {
-      metaCoinEthBalance = outCoinBalanceEth.toNumber();
-    }).then(function() {
-      assert.equal(metaCoinEthBalance, 2 * metaCoinBalance, "Library function returned unexpected function, linkage may be broken");
-    });
-  });
-  it("should send coin correctly", function() {
-    var meta;
-
-    // Get initial balances of first and second account.
-    var account_one = accounts[0];
-    var account_two = accounts[1];
-
-    var account_one_starting_balance;
-    var account_two_starting_balance;
-    var account_one_ending_balance;
-    var account_two_ending_balance;
-
-    var amount = 10;
-
-    return MetaCoin.deployed().then(function(instance) {
-      meta = instance;
-      return meta.getBalance.call(account_one);
-    }).then(function(balance) {
-      account_one_starting_balance = balance.toNumber();
-      return meta.getBalance.call(account_two);
-    }).then(function(balance) {
-      account_two_starting_balance = balance.toNumber();
-      return meta.sendCoin(account_two, amount, {from: account_one});
-    }).then(function() {
-      return meta.getBalance.call(account_one);
-    }).then(function(balance) {
-      account_one_ending_balance = balance.toNumber();
-      return meta.getBalance.call(account_two);
-    }).then(function(balance) {
-      account_two_ending_balance = balance.toNumber();
-
-      assert.equal(account_one_ending_balance, account_one_starting_balance - amount, "Amount wasn't correctly taken from the sender");
-      assert.equal(account_two_ending_balance, account_two_starting_balance + amount, "Amount wasn't correctly sent to the receiver");
-    });
-  });
-});
-*/

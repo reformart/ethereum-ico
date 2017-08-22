@@ -7,5 +7,5 @@ module.exports = function(deployer) {
 
   //deployer.deploy(AbstractERC20);
   //deployer.link(AbstractERC20, StandardToken);
-  deployer.deploy(Token, 100);
+  deployer.deploy(Token, 100 * Math.pow(10, 8));
 };

@@ -19,8 +19,8 @@ contract CtrlPreIco is AbstractController {
   uint256 public targetHardCap;
 
   event MoneyAction(string _msg, uint256 _value);
-  event SaleClosedSuccess(uint256 _collectedEther);
-  event SaleClosedFail(uint256 _collectedEther);
+  event SaleClosedSuccess(uint256 _tokenSold);
+  event SaleClosedFail(uint256 _tokenSold);
 
   function CtrlPreIco(address _coinToken, uint256 _softCap, uint256 _hardCap) AbstractController(_coinToken) {
     tokenDecMult = token.decimalsMultiplier();
@@ -78,7 +78,7 @@ contract CtrlPreIco is AbstractController {
     
     require(state == 3);
     owner.transfer(ethCollected);
-    //ethCollected = 0;
+    ethCollected = 0;
     state = 4;
   }
 
@@ -90,10 +90,10 @@ contract CtrlPreIco is AbstractController {
   function close() ownerOnly {
     require(state == 1);
     if (tokenSold >= targetSoftCap) {
-      SaleClosedSuccess(ethCollected);
+      SaleClosedSuccess(tokenSold);
       state = 3;
     } else {
-      SaleClosedFail(ethCollected);
+      SaleClosedFail(tokenSold);
       state = 2;
     }
   }

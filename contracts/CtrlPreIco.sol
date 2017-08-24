@@ -7,14 +7,25 @@ contract CtrlPreIco is AbstractController {
   uint8 public constant COINS_PER_ETH = 20;
   //mapping (address => uint256) ethBalances;
   uint256 ethCollected;
-  bool public isClosed = true;
+  uint256 tokenSold;
   uint256 tokenDecMult;
+  uint8 public state = 0; // 0 - not started yet
+                          // 1 - running
+                          // 2 - closed mannually and not success
+                          // 3 - closed and target reached success
+                          // 4 - success & funds withdrawed
+
+  uint256 public targetSoftCap;
+  uint256 public targetHardCap;
 
   event MoneyAction(string _msg, uint256 _value);
+  event SaleClosedSuccess(uint256 _collectedEther);
+  event SaleClosedFail(uint256 _collectedEther);
 
-
-  function CtrlPreIco(address _coinToken) AbstractController(_coinToken) {
+  function CtrlPreIco(address _coinToken, uint256 _softCap, uint256 _hardCap) AbstractController(_coinToken) {
     tokenDecMult = token.decimalsMultiplier();
+    targetSoftCap = _softCap * tokenDecMult;
+    targetHardCap = _hardCap * tokenDecMult;
   }
 
   function getControllerName() returns(string ctrlName) {
@@ -27,20 +38,29 @@ contract CtrlPreIco is AbstractController {
 
   function buy() payable {
 
-    require(!isClosed);
-    MoneyAction('came eth: ', msg.value);
-    uint256 amount = msg.value * COINS_PER_ETH * tokenDecMult / 1 ether;
+    //require(!isClosed);
+    require(canBuy());
+    //MoneyAction('came eth: ', msg.value);
+    //uint256 amount = msg.value / 1 ether * COINS_PER_ETH * tokenDecMult;
+    uint256 amount = msg.value * COINS_PER_ETH / (1 ether / tokenDecMult);
     require(amount > 0);
-    MoneyAction('token amount: ', amount);
+    //MoneyAction('token amount: ', amount);
     token.sellingTo(msg.sender, amount);
     //ethBalances[msg.sender] += msg.value;
     ethCollected += msg.value;
+    tokenSold += amount;
   }
+
+  function canBuy() constant returns(bool _canBuy) {
+    return state == 1;
+  }
+
+
 
   
   function getBack() {
 
-    //require(isClosed);
+    require(state == 2);
 
     uint256 tokenAmount = token.balanceOf(msg.sender);
     MoneyAction("getBack call. tokens: ", tokenAmount);
@@ -53,14 +73,29 @@ contract CtrlPreIco is AbstractController {
     //ethBalances[msg.sender] = 0;
     ethCollected -= weiAmount;
   }
-  
+ 
+  function withdraw() ownerOnly {
+    
+    require(state == 3);
+    owner.transfer(ethCollected);
+    //ethCollected = 0;
+    state = 4;
+  }
 
   function open() ownerOnly {
-    isClosed = false;
+    require(state == 0);
+    state = 1;
   }
 
   function close() ownerOnly {
-    isClosed = true;
+    require(state == 1);
+    if (tokenSold >= targetSoftCap) {
+      SaleClosedSuccess(ethCollected);
+      state = 3;
+    } else {
+      SaleClosedFail(ethCollected);
+      state = 2;
+    }
   }
 
 }

@@ -49,6 +49,10 @@ contract CtrlPreIco is AbstractController {
     //ethBalances[msg.sender] += msg.value;
     ethCollected += msg.value;
     tokenSold += amount;
+    if (tokenSold >= targetHardCap) {
+      SaleClosedSuccess(tokenSold);
+      state = 3;
+    }
   }
 
   function canBuy() constant returns(bool _canBuy) {

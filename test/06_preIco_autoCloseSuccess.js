@@ -64,11 +64,11 @@ contract('Test preIco. Success story with automatic close', function(accounts) {
     });
   }
 
-  it("Must be closed now automatically", function(done) {
+  it("Must be closed now automatically", function() {
   
     return ctrl.state().then(_state => {
       assert.equal(3, _state);
-      return ctrl.canBy()
+      return ctrl.canBuy()
     }).then(_canBuy => {
       assert.equal(false, _canBuy);
     })
@@ -77,7 +77,7 @@ contract('Test preIco. Success story with automatic close', function(accounts) {
 
   it("Acc#4 must NOt be able to by", function(done) {
  
-    return web3.eth.sendTransaction({
+    web3.eth.sendTransaction({
       to: ctrl.address,
       from: accounts[4],
       value: web3.utils.toWei(1, 'ether')

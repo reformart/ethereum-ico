@@ -62,16 +62,17 @@ contract('Test preIco. Success story with manual close', function(accounts) {
     });
   });
 
-  it("Acc#1 must NOT getBack his ether while crowdsale is open", function(done) {
+  it("Acc#1 must NOT get back his ether while crowdsale is open", function(done) {
  
     let balanceBefore;    
     web3.eth.getBalance(accounts[1]).then(_balance => {
       //console.log("_balance", web3.utils.fromWei(_balance, 'ether'));
       balanceBefore = _balance;
-      return ctrl.getBack({from: accounts[1]});
+      return ctrl.refund({from: accounts[1]});
     }).then(_txn => {
-      return done(new Error("getBack must throw error"));
+      return done(new Error("refund must throw error"));
     }).catch(_err => {
+      assert(_err.message.indexOf('invalid opcode') > 0);
       return done();
     })
   });
@@ -124,16 +125,17 @@ contract('Test preIco. Success story with manual close', function(accounts) {
   });
 
 
-  it("Acc#1 must NOT getBack his ether", function(done) {
+  it("Acc#1 must NOT get back his ether when crowdsale is success", function(done) {
  
     let balanceBefore;    
     web3.eth.getBalance(accounts[1]).then(_balance => {
       //console.log("_balance", web3.utils.fromWei(_balance, 'ether'));
       balanceBefore = _balance;
-      return ctrl.getBack({from: accounts[1]});
+      return ctrl.refund({from: accounts[1]});
     }).then(_txn => {
-      return done(new Error("Must throw err when try to getback in successfully closed crowdsale"));
+      return done(new Error("Must throw err when try to get back in successfully closed crowdsale"));
     }).catch(_err => {
+      assert(_err.message.indexOf('invalid opcode') > 0);
       return done();
     });
   });

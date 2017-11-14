@@ -176,16 +176,18 @@ contract('Test preIco. Fail story', function(accounts) {
   */
 
 
-  it("Acc#1 must NOT getBack his ether while crowdsale is open", function(done) {
+  it("Acc#1 must NOT get back his ether while crowdsale is open", function(done) {
  
     let balanceBefore;    
     web3.eth.getBalance(accounts[1]).then(_balance => {
       //console.log("_balance", web3.utils.fromWei(_balance, 'ether'));
       balanceBefore = _balance;
-      return ctrl.getBack({from: accounts[1]});
+      return ctrl.refund({from: accounts[1]});
     }).then(_txn => {
-      return done(new Error("getBack must throw error"));
+      return done(new Error("refund() must throw error"));
     }).catch(_err => {
+      //console.log('Catched ERR: ', _err);
+      assert(_err.message.indexOf('invalid opcode') > 0);
       return done();
     })
   });
@@ -224,13 +226,13 @@ contract('Test preIco. Fail story', function(accounts) {
     });
   });
 
-  it("Acc#1 must getBack his almost 1 ether", function(done) {
+  it("Acc#1 must get back his almost 1 ether", function(done) {
  
     let balanceBefore;    
     web3.eth.getBalance(accounts[1]).then(_balance => {
       //console.log("_balance", web3.utils.fromWei(_balance, 'ether'));
       balanceBefore = _balance;
-      return ctrl.getBack({from: accounts[1]});
+      return ctrl.refund({from: accounts[1]});
     }).then(_txn => {
       return token.balanceOf(accounts[1]);
     }).then(_balance => {

@@ -18,7 +18,7 @@ contract CtrlPreIco is AbstractController {
   uint256 public targetSoftCap;
   uint256 public targetHardCap;
 
-  event MoneyAction(string _msg, uint256 _value);
+  //event MoneyAction(string _msg, uint256 _value);
   event SaleClosedSuccess(uint256 _tokenSold);
   event SaleClosedFail(uint256 _tokenSold);
 
@@ -62,15 +62,15 @@ contract CtrlPreIco is AbstractController {
 
 
   
-  function getBack() {
+  function refund() {
 
     require(state == 2);
 
     uint256 tokenAmount = token.balanceOf(msg.sender);
-    MoneyAction("getBack call. tokens: ", tokenAmount);
+    //MoneyAction("refund call. tokens: ", tokenAmount);
     require(tokenAmount > 0);
     uint256 weiAmount = tokenAmount * 1 ether / tokenDecMult / COINS_PER_ETH;
-    MoneyAction('return wei: ', weiAmount);
+    //MoneyAction('return wei: ', weiAmount);
 
     token.sellingReset(msg.sender);
     msg.sender.transfer(weiAmount);

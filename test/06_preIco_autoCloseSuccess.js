@@ -107,15 +107,15 @@ contract('Test preIco. Success story with automatic close', function(accounts) {
     });
   });
 
-  it("Acc#1 must NOT getBack his ether", function(done) {
+  it("Acc#1 must NOT get back his ether from success crowdsale", function(done) {
  
     let balanceBefore;    
     web3.eth.getBalance(accounts[1]).then(_balance => {
       //console.log("_balance", web3.utils.fromWei(_balance, 'ether'));
       balanceBefore = _balance;
-      return ctrl.getBack({from: accounts[1]});
+      return ctrl.refund({from: accounts[1]});
     }).then(_txn => {
-      return done(new Error("Must throw err when try to getback in successfully closed crowdsale"));
+      return done(new Error("Must throw err when try to get back in successfully closed crowdsale"));
     }).catch(_err => {
       return done();
     });

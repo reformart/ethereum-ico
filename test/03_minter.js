@@ -22,7 +22,7 @@ contract('Simple minrter contract', function(accounts) {
     });
   });
 
-  it("Must make emission of 20 tokens", function() {
+  it.skip("Must make emission of 20 tokens", function() {
   
     return minter.emission(20 * tokenDecimals).then(_res => {
     

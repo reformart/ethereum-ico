@@ -23,12 +23,14 @@ contract Token is StandardToken, ControlledToken {
     totalSupply = _initialSupply;
   }
 
+  /*
   function emission(uint256 _amount) controllersOnly {
     
     balances[owner] += _amount;
     totalSupply += _amount;
     Emission(msg.sender, _amount);
   }
+  */
 
   function sellingTo(address _to, uint256 _value) controllersOnly {
   

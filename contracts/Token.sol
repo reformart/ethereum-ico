@@ -9,8 +9,8 @@ import "./ControlledToken.sol";
 contract Token is StandardToken, ControlledToken {
 
   address owner;
-  string public name = "Osmall Coin Token";
-  string public symbol = "OCT";
+  string public name = "Reformart Token";
+  string public symbol = "RMR";
   uint8 public decimals = 8;
   uint256 public decimalsMultiplier = 1e8;
 

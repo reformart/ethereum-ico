@@ -4,7 +4,8 @@ import "./AbstractController.sol";
 
 contract CtrlPreIco is AbstractController {
 
-  uint8 public constant COINS_PER_ETH = 20;
+  //uint8 public constant COINS_PER_ETH = 20;
+  uint256 public constant COINS_PER_ETH = 3000;
   //mapping (address => uint256) ethBalances;
   uint256 ethCollected;
   uint256 tokenSold;

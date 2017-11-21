@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 const Token = artifacts.require("./Token.sol");
 const Minter = artifacts.require("./CtrlMinter.sol");
 
@@ -34,3 +34,4 @@ contract('Simple minrter contract', function(accounts) {
     });
   });
 });
+*/

@@ -11,7 +11,10 @@ module.exports = function(deployer, network) {
     });
   } else if (network == 'real') {
 
-    deployer.deploy(Token, 100000000 * Math.pow(10, 8));
+    //deployer.deploy(Token, 100000000 * Math.pow(10, 8));
+
+    //let tokenAddr = '0x6Fb582bcd72E0b22d623ca5B1AE304e509213890';
+    //deployer.deploy(CtrlPreIco, tokenAddr, 3000000, 5000000);
 
   } else { // devel
     deployer.deploy(Token, 100 * Math.pow(10, 8));
